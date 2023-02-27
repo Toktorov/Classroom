@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import mixins
 
 from apps.tasks.models import Theme, Task, SendTask
-from apps.tasks.serializers import ThemeSerializer, TaskSerializer, SendTaskSerializer
+from apps.tasks.serializers import ThemeSerializer, TaskSerializer, TaskDetailSerializer, SendTaskSerializer
 from apps.tasks.permissions import TaskPermissions, SendTaskPermissions
 
 # Create your views here.
@@ -26,6 +26,11 @@ class TaskAPIViewSet(GenericViewSet,
     serializer_class = TaskSerializer
     permission_classes = (IsAuthenticated, )
 
+    def get_serializer_class(self):
+        if self.action in ('retrieve', ):
+            return TaskDetailSerializer
+        return TaskSerializer
+
     def get_permissions(self):
         if self.action in ('update', 'partial_update', 'destroy'):
             return (IsAuthenticated(), TaskPermissions())
@@ -45,6 +50,7 @@ class SendTaskAPIViewSet(GenericViewSet,
                          mixins.DestroyModelMixin):
     queryset = SendTask.objects.all()
     serializer_class = SendTaskSerializer
+    permission_classes = (IsAuthenticated, SendTaskPermissions)
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)

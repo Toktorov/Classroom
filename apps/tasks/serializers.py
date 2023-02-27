@@ -20,3 +20,11 @@ class SendTaskSerializer(serializers.ModelSerializer):
         model = SendTask
         fields = ('id', 'user', 'task', 'url', 
                   'file', 'point', 'created')
+        
+class TaskDetailSerializer(serializers.ModelSerializer):
+    users_send_tasks = SendTaskSerializer(read_only=True, many=True)
+    class Meta:
+        model = Task
+        fields = ('id', 'course', 'title', 'user',
+                  'description', 'points', 'deadline',
+                  'theme', 'url_task', 'file_task', 'users_send_tasks')
