@@ -73,3 +73,37 @@ class Task(models.Model):
     class Meta:
         verbose_name = "Задание"
         verbose_name_plural = "Задании"
+
+class SendTask(models.Model):
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE,
+        related_name="task_user",
+        verbose_name="Пользователь"
+    )
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+        related_name="users_send_tasks"
+    )
+    url = models.URLField(
+        verbose_name="Ссылка"
+    )
+    file = models.FileField(
+        upload_to="send_tasks/",
+        verbose_name="Файл"
+    )
+    point = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Оценка задания"
+    )
+    created = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.user} {self.task}"
+    
+    class Meta:
+        verbose_name = "Отправить задание"
+        verbose_name_plural = "Отправить задание"

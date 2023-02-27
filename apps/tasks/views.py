@@ -2,9 +2,9 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import mixins
 
-from apps.tasks.models import Theme, Task
-from apps.tasks.serializers import ThemeSerializer, TaskSerializer
-from apps.tasks.permissions import TaskPermissions
+from apps.tasks.models import Theme, Task, SendTask
+from apps.tasks.serializers import ThemeSerializer, TaskSerializer, SendTaskSerializer
+from apps.tasks.permissions import TaskPermissions, SendTaskPermissions
 
 # Create your views here.
 class ThemeAPIViewSet(GenericViewSet,
@@ -33,6 +33,18 @@ class TaskAPIViewSet(GenericViewSet,
 
     def filter_queryset(self, queryset):
         return Task.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+    
+class SendTaskAPIViewSet(GenericViewSet,
+                         mixins.ListModelMixin, 
+                         mixins.RetrieveModelMixin,
+                         mixins.UpdateModelMixin,
+                         mixins.CreateModelMixin, 
+                         mixins.DestroyModelMixin):
+    queryset = SendTask.objects.all()
+    serializer_class = SendTaskSerializer
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
