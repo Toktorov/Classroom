@@ -11,6 +11,6 @@ class ThemeSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task 
-        fields = ('id', 'course', 'title',
+        fields = ('id', 'course', 'title', 'user',
                   'description', 'points', 'deadline',
                   'theme', 'url_task', 'file_task')
