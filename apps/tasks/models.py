@@ -1,9 +1,17 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 from apps.courses.models import Course
 
+User = get_user_model()
+
 # Create your models here.
 class Theme(models.Model):
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name="course_themes"
+    )
     title = models.CharField(
         max_length=255,
         verbose_name="Тема"
@@ -21,6 +29,13 @@ class Task(models.Model):
         Course,
         on_delete=models.CASCADE,
         related_name="course_tasks"
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        related_name="users_tasks",
+        verbose_name="Пользователь",
+        null=True
     )
     title = models.CharField(
         max_length=255,

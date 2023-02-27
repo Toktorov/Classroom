@@ -37,6 +37,7 @@ schema_view = get_schema_view(
 api_urlpatterns = [
     path('users/', include('apps.users.urls')),
     path('courses/', include('apps.courses.urls')),
+    path('tasks/', include('apps.tasks.urls')),
 ]
 
 urlpatterns = [
