@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.crypto import get_random_string
 
 from apps.users.models import User
 
@@ -29,9 +30,18 @@ class Course(models.Model):
         verbose_name="Аудитория",
         blank=True, null=True
     )
+    code = models.CharField(
+        max_length=8,
+        verbose_name="Код курса",
+        unique=True,
+    )
 
     def __str__(self):
         return f"{self.user} {self.name}"
+    
+    def save(self, *args, **kwargs):
+        self.code = get_random_string(10).lower()
+        super(Course, self).save(*args, **kwargs)
     
     class Meta:
         verbose_name = "Курс"
